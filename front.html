@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <title>نظام المصادقة</title>
+    <style>
+        /* تنسيقات عربية */
+        body { direction: rtl; font-family: 'Arial'; }
+        .form-container { margin: 20px; padding: 15px; border: 1px solid #ccc; }
+        .hidden { display: none; }
+        button { margin-top: 10px; }
+    </style>
+</head>
+<body>
+    <!-- نموذج التسجيل -->
+    <div class="form-container" id="registerForm">
+        <h2>تسجيل مستخدم جديد</h2>
+        <form id="register">
+            <input type="text" id="fullName" placeholder="الاسم الكامل" required>
+            <input type="email" id="email" placeholder="البريد الإلكتروني" required>
+            <input type="password" id="password" placeholder="كلمة المرور" required>
+            <button type="submit">تسجيل</button>
+        </form>
+        <button onclick="toggleForms()">لديك حساب؟ سجل الدخول</button>
+    </div>
+
+    <!-- نموذج تسجيل الدخول -->
+    <div class="form-container hidden" id="loginForm">
+        <h2>تسجيل الدخول</h2>
+        <form id="login">
+            <input type="email" id="loginEmail" placeholder="البريد الإلكتروني" required>
+            <input type="password" id="loginPassword" placeholder="كلمة المرور" required>
+            <button type="submit">دخول</button>
+        </form>
+        <button onclick="toggleForms()">إنشاء حساب جديد</button>
+    </div>
+
+    <!-- منطقة النتائج -->
+    <div id="result"></div>
+
+<script>
+// تبديل بين النموذجين
+function toggleForms() {
+    document.getElementById('registerForm').classList.toggle('hidden');
+    document.getElementById('loginForm').classList.toggle('hidden');
+}
+
+// تسجيل مستخدم جديد
+document.getElementById('register').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    
+    const userData = {
+        fullName: document.getElementById('fullName').value,
+        email: document.getElementById('email').value,
+        password: document.getElementById('password').value
+    };
+
+    try {
+        const response = await fetch('http://localhost:5000/auth/register', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(userData)
+        });
+
+        const result = await response.json();
+        document.getElementById('result').innerHTML = result.message || 'تم التسجيل بنجاح!';
+        
+    } catch (error) {
+        console.error('خطأ:', error);
+    }
+});
+
+// تسجيل الدخول
+document.getElementById('login').addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const loginData = {
+        email: document.getElementById('loginEmail').value,
+        password: document.getElementById('loginPassword').value
+    };
+
+    try {
+        const response = await fetch('http://localhost:5000/auth/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'include', // ضروري لاستقبال الكوكيز
+            body: JSON.stringify(loginData)
+        });
+
+        const { accessToken, fullName } = await response.json();
+        
+        // حفظ التوكن في localStorage
+        localStorage.setItem('accessToken', accessToken);
+        document.getElementById('result').innerHTML = `مرحبًا ${fullName}!`;
+
+    } catch (error) {
+        console.error('خطأ:', error);
+    }
+});
+
+// تحديث التوكن (مثال)
+async function refreshToken() {
+    try {
+        const response = await fetch('http://localhost:5000/auth/refresh', {
+            method: 'GET',
+            credentials: 'include' // إرسال الكوكيز تلقائيًا
+        });
+        
+        const { accessToken } = await response.json();
+        localStorage.setItem('accessToken', accessToken);
+        
+    } catch (error) {
+        console.error('فشل تحديث التوكن:', error);
+    }
+}
+</script>
+
+</body>
+</html>
