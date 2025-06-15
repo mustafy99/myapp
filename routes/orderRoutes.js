@@ -32,6 +32,6 @@ router.route("/:id").delete(IsAdminOrSupervisor,deleteOrder)
 router.route("/assing/:id").put(IsAdminOrSupervisor,assingNurseToOrder)
 router.route("/status/:id").put(IsAdminOrSupervisor,updateOrderStatus)
 router.route("/cancel/:id").put(cancelOrderByPatient) 
-router.route("/status/:status").get(getOrdersByStatus)//
+router.route("/status/:status").get(IsAdminOrSupervisor,getOrdersByStatus)//
 
 module.exports = router;

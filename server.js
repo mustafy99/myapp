@@ -24,7 +24,7 @@ app.use("/users" , require("./routes/UserRoutes"));
 app.use("/order" , require("./routes/orderRoutes"));
 
 // استدعاء ملف البوت
-//require('./telegramBot');
+require('./telegramBot');
 
 
 app.all("*",(req,res)=>{
@@ -33,7 +33,7 @@ app.all("*",(req,res)=>{
          res.sendFile(path.join(__dirname,"views","404.html"))
   }
    else if(req.accepts("json")){
-    res.json({messge : " 404 Not Found"})
+    res.json({message : " 404 Not Found"})
   }
    else{
     res.type("text").send("404 Not Found")

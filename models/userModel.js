@@ -32,19 +32,18 @@ const UserSchema = new mongoose.Schema({
         type: Number,
         min: 0,
         max: 120
-      },
-
-    role:{
+      },    role:{
         type:String,
         required: false,
         enum:['patient','nurse','SuberVisor','admin'],
         default:'patient'
     },
+
     telegramId: {
-        type: String,
-        required: false,
-        unique: true // ممكن تشيله لو هتسمح بأكثر من حساب بنفس ID
-      },
+    type: String,
+    sparse: true,
+    default: null,  // هذا يسمح بوجود قيم null متعددة
+  }
       
  
 

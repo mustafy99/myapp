@@ -2,9 +2,19 @@ const TelegramBot = require('node-telegram-bot-api');
 require('dotenv').config();
 const User = require("./models/userModel");
 
+let bot = null;
 
+// التحقق من وجود token قبل إنشاء البوت
 const token = process.env.TELEGRAM_BOT_TOKEN;
-const bot = new TelegramBot(token, { polling: true });
+if (!token) {
+    console.error('❌ لم يتم العثور على توكن البوت في ملف .env');
+} else if (!bot) {
+    bot = new TelegramBot(token, { 
+        polling: true,
+        webHook: false // تعطيل webhook لتجنب التعارض
+    });
+
+}
 
 const users = {};
 

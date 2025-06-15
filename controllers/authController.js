@@ -90,17 +90,28 @@ exports.register = async (req, res) => {
             secure: true,
             sameSite: "None",
             maxAge: 1000 * 60 * 60 * 24 * 7
-        });
-
-
-        const userInfo = {
-            name:foundUser.full_name,
-            age:foundUser.age,
-            phone: foundUser.phone,
+        });        const userInfo = {
+            name: user.full_name,
+            age: user.age,
+            phone: user.phone,
+            role: user.role,
             registeredAt: new Date().toLocaleString('ar-EG', { hour12: true }) // التاريخ والوقت بالعربي (مصر)
              };
 
-const message = `👤 تم تسجيل حساب جديد:\n\n📛 الاسم: ${userInfo.name}\n📧 العمر: ${userInfo.age}\n📞 رقم الهاتف: ${userInfo.phone} \n ${userInfo.registeredAt}`;
+const message = `
+━━━━━━━━━━━━━━━━━━
+✅ تم تسجيل حساب جديد
+━━━━━━━━━━━━━━━━━━
+
+👤 الاسم: ${userInfo.name}
+🎂 العمر: ${userInfo.age}
+📞 الهاتف: ${userInfo.phone}
+🛡️ الدور: ${userInfo.role}
+📅 تاريخ التسجيل: ${userInfo.registeredAt}
+
+━━━━━━━━━━━━━━━━━━
+`;
+
 
 notifyAllUsers(message);
 
@@ -186,7 +197,20 @@ exports.login = async (req, res) => {
               registeredAt: new Date().toLocaleString('ar-EG', { hour12: true }) // التاريخ والوقت بالعربي (مصر)
                };
 
-const message = `👤 تم تسجيل دخول جديد:\n\n📛 الاسم: ${userInfo.name}\n📧 العمر: ${userInfo.age}\n📞 رقم الهاتف: ${userInfo.phone}\n \n role :  ${userInfo.role}\n ${userInfo.registeredAt}`;
+const message = `
+━━━━━━━━━━━━━━━━━━
+🔐 تم تسجيل دخول جديد
+━━━━━━━━━━━━━━━━━━
+
+👤 الاسم: ${userInfo.name}
+🎂 العمر: ${userInfo.age}
+📞 الهاتف: ${userInfo.phone}
+🛡️ الدور: ${userInfo.role}
+📅 تاريخ التسجيل: ${userInfo.registeredAt}
+
+━━━━━━━━━━━━━━━━━━
+`;
+
 
 notifyAllUsers(message);
 
